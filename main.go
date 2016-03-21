@@ -9,15 +9,15 @@ import (
 
 func main() {
 	const (
-		DefaultAddress = "127.0.0.1"
+		DefaultAddress    = "127.0.0.1"
 		DefaultBufferSize = 1024
-		DefaultPort = "8080"
+		DefaultPort       = "8080"
 	)
 
 	var (
-		addr string
+		addr    string
 		bufSize int
-		port string
+		port    string
 	)
 
 	flag.StringVar(&addr, "addr", DefaultAddress, "Server address")
