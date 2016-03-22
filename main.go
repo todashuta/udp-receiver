@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"time"
 )
 
 func main() {
@@ -12,12 +13,14 @@ func main() {
 		DefaultAddress    = "127.0.0.1"
 		DefaultBufferSize = 1024
 		DefaultPort       = "8080"
+		DefaultInterval   = 0
 	)
 
 	var (
-		addr    string
-		bufSize int
-		port    string
+		addr     string
+		bufSize  int
+		port     string
+		interval int
 	)
 
 	flag.StringVar(&addr, "addr", DefaultAddress, "Server address")
@@ -26,6 +29,8 @@ func main() {
 	flag.IntVar(&bufSize, "b", DefaultBufferSize, "Buffer size")
 	flag.StringVar(&port, "port", DefaultPort, "Port number")
 	flag.StringVar(&port, "p", DefaultPort, "Shorthand of -port")
+	flag.IntVar(&interval, "interval", DefaultInterval, "Interval of output (millisecond) (default 0)")
+	flag.IntVar(&interval, "i", DefaultInterval, "Shorthand of -interval")
 	flag.Parse()
 
 	serverAddr, err := net.ResolveUDPAddr("udp", addr+":"+port)
@@ -49,5 +54,6 @@ func main() {
 			fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
 		}
 		fmt.Printf("[%s] %s\n", remoteAddr, string(buf[0:n]))
+		time.Sleep(time.Duration(interval) * time.Millisecond)
 	}
 }
