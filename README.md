@@ -6,7 +6,7 @@ Simple UDP stream viewer
 Usage
 -----
 
-    $ udp-viewer -h
+    $ udp-viewer --help
 
 Install
 -------
