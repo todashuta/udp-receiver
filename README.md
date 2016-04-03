@@ -6,7 +6,7 @@ Simple UDP receiver(server)
 Usage
 -----
 
-    $ udp-receiver --help
+    $ udp-receiver -p {PORT_NUMBER}
 
 Install
 -------
