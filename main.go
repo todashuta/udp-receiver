@@ -23,20 +23,34 @@ func main() {
 		timestamp  bool
 	)
 
-	flag.IntVar(&bufSize, "buffer-size", DefaultBufferSize, "Buffer size")
-	flag.IntVar(&bufSize, "b", DefaultBufferSize, "Buffer size")
+	flag.IntVar(&bufSize, "buffer-size", DefaultBufferSize, "")
+	flag.IntVar(&bufSize, "b", DefaultBufferSize, "")
 
-	flag.IntVar(&interval, "interval", DefaultInterval, "Interval of output (millisecond) (default 0)")
-	flag.IntVar(&interval, "i", DefaultInterval, "Shorthand of -interval")
+	flag.IntVar(&interval, "interval", DefaultInterval, "")
+	flag.IntVar(&interval, "i", DefaultInterval, "")
 
-	flag.BoolVar(&listenAny, "listen-any", false, "Listen all available IP addresses (i.e. 0.0.0.0)")
-	flag.BoolVar(&listenAny, "a", false, "Shorthand of -listen-any")
+	flag.BoolVar(&listenAny, "listen-any", false, "")
+	flag.BoolVar(&listenAny, "a", false, "")
 
-	flag.StringVar(&listenPort, "listen-port", "", "Listen port number")
-	flag.StringVar(&listenPort, "p", "", "Shorthand of -listen-port")
+	flag.StringVar(&listenPort, "listen-port", "", "")
+	flag.StringVar(&listenPort, "p", "", "")
 
-	flag.BoolVar(&timestamp, "show-timestamp", false, "Show timestamp")
-	flag.BoolVar(&timestamp, "t", false, "Shorthand of -show-timestamp")
+	flag.BoolVar(&timestamp, "show-timestamp", false, "")
+	flag.BoolVar(&timestamp, "t", false, "")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Usage: udp-receiver [OPTION]...
+Options:
+  -a, -listen-any      : Listen all available IP addresses (i.e. 0.0.0.0)
+  -b, -buffer-size     : Buffer size
+  -p, -listen-port     : Listen port number
+  -t, -show-timestamp  : Show timestamp
+
+Experimental options:
+  -i, -interval        : Output interval (millisecond) (default 0)
+`)
+		os.Exit(2)
+	}
 
 	flag.Parse()
 
