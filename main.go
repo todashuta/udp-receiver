@@ -29,7 +29,7 @@ func main() {
 	flag.IntVar(&interval, "interval", DefaultInterval, "Interval of output (millisecond) (default 0)")
 	flag.IntVar(&interval, "i", DefaultInterval, "Shorthand of -interval")
 
-	flag.BoolVar(&listenAny, "listen-any", false, "Listen all avalable IP addresses (i.e. 0.0.0.0)")
+	flag.BoolVar(&listenAny, "listen-any", false, "Listen all available IP addresses (i.e. 0.0.0.0)")
 	flag.BoolVar(&listenAny, "a", false, "Shorthand of -listen-any")
 
 	flag.StringVar(&listenPort, "listen-port", "", "Listen port number")
