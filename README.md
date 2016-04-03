@@ -1,17 +1,17 @@
-UDP viewer
-==========
+UDP receiver
+============
 
-Simple UDP stream viewer
+Simple UDP receiver(server)
 
 Usage
 -----
 
-    $ udp-viewer --help
+    $ udp-receiver --help
 
 Install
 -------
 
-    $ go get github.com/todashuta/udp-viewer
+    $ go get github.com/todashuta/udp-receiver
 
 License
 -------

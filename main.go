@@ -10,30 +10,48 @@ import (
 
 func main() {
 	const (
-		DefaultHost       = "127.0.0.1"
 		DefaultBufferSize = 1024
-		DefaultPort       = "8080"
 		DefaultInterval   = 0
 	)
 
 	var (
-		host     string
-		bufSize  int
-		port     string
-		interval int
+		bufSize    int
+		interval   int
+		listenAny  bool
+		listenIP   string
+		listenPort string
+		timestamp  bool
 	)
 
-	flag.StringVar(&host, "host", DefaultHost, "Sender host address")
-	flag.StringVar(&host, "h", DefaultHost, "Shorthand of -host")
 	flag.IntVar(&bufSize, "buffer-size", DefaultBufferSize, "Buffer size")
 	flag.IntVar(&bufSize, "b", DefaultBufferSize, "Buffer size")
-	flag.StringVar(&port, "port", DefaultPort, "Sender port number")
-	flag.StringVar(&port, "p", DefaultPort, "Shorthand of -port")
+
 	flag.IntVar(&interval, "interval", DefaultInterval, "Interval of output (millisecond) (default 0)")
 	flag.IntVar(&interval, "i", DefaultInterval, "Shorthand of -interval")
+
+	flag.BoolVar(&listenAny, "listen-any", false, "Listen all avalable IP addresses (e.g. 0.0.0.0)")
+	flag.BoolVar(&listenAny, "a", false, "Shorthand of -listen-any")
+
+	flag.StringVar(&listenPort, "listen-port", "", "Listen port number")
+	flag.StringVar(&listenPort, "p", "", "Shorthand of -listen-port")
+
+	flag.BoolVar(&timestamp, "show-timestamp", false, "Show timestamp")
+	flag.BoolVar(&timestamp, "t", false, "Shorthand of -show-timestamp")
+
 	flag.Parse()
 
-	localEP, err := net.ResolveUDPAddr("udp", host+":"+port)
+	if listenPort == "" {
+		fmt.Fprintln(os.Stderr, "udp-viewer: ERROR: Please specify a port number (e.g. --listen-port=4000)")
+		os.Exit(1)
+	}
+
+	if listenAny {
+		listenIP = "0.0.0.0"
+	} else {
+		listenIP = "127.0.0.1"
+	}
+
+	localEP, err := net.ResolveUDPAddr("udp", listenIP+":"+listenPort)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
 		os.Exit(1)
@@ -47,13 +65,17 @@ func main() {
 	defer conn.Close()
 
 	buf := make([]byte, bufSize)
+	var t string
 
 	for {
 		n, remoteEP, err := conn.ReadFromUDP(buf)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
 		}
-		fmt.Printf("[%s] %s\n", remoteEP, string(buf[0:n]))
-		time.Sleep(time.Duration(interval) * time.Millisecond)
+		if timestamp {
+			t = time.Now().Format("2006-01-02 15:04:05.00 ")
+		}
+		fmt.Printf("%s[%s] %s\n", t, remoteEP, string(buf[0:n]))
+		time.Sleep(time.Duration(interval) * time.Millisecond) // FIXME
 	}
 }
