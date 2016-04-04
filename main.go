@@ -52,7 +52,7 @@ Options:
   -t, -show-timestamp   : show timestamp
 
 Experimental options:
-  -i, -interval        : output interval (millisecond) (default %d)
+  -i, -interval         : output interval (millisecond) (default %d)
 `, DefaultBufferSize, DefaultInterval)
 	}
 
