@@ -18,7 +18,6 @@ func main() {
 		bufSize       int
 		interval      int
 		listenAny     bool
-		listenIP      string
 		listenPort    string
 		showTimestamp bool
 		showSender    bool
@@ -63,6 +62,7 @@ Experimental options:
 		os.Exit(1)
 	}
 
+	var listenIP string
 	if listenAny {
 		listenIP = "0.0.0.0"
 	} else {
