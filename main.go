@@ -84,19 +84,36 @@ Experimental options:
 
 	buf := make([]byte, bufSize)
 
+	var tick <-chan time.Time
+	useInterval := interval > 0
+	if useInterval {
+		tick = time.Tick(time.Duration(interval) * time.Millisecond)
+	}
+
 	for {
 		n, remoteEP, err := conn.ReadFromUDP(buf)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
 		}
+
+		var s string
 		if showTimestamp {
-			fmt.Printf(time.Now().Format("2006-01-02 15:04:05.00 "))
+			s += time.Now().Format("2006-01-02 15:04:05.00 ")
 		}
 		if showSender {
-			fmt.Printf("[%s] ", remoteEP)
+			s += fmt.Sprintf("[%s] ", remoteEP)
 		}
-		fmt.Printf("%s\n", string(buf[0:n]))
+		s += string(buf[0:n])
 
-		time.Sleep(time.Duration(interval) * time.Millisecond) // FIXME
+		if useInterval {
+			select {
+			case <-tick:
+				fmt.Println(s)
+			default:
+				// Nop
+			}
+		} else {
+			fmt.Println(s)
+		}
 	}
 }
