@@ -46,12 +46,10 @@ func main() {
 Options:
   -a, -listen-any       : listen all available IP addresses (i.e. 0.0.0.0)
   -b, -buffer-size=NUM  : buffer size (default: %d)
+  -i, -interval=STRING  : output interval (e.g. 2h45m, 1m, 2s, 300ms) (default %d)
   -p, -listen-port=NUM  : listen port number (required)
   -s, -show-sender      : show sender ([address:port])
   -t, -show-timestamp   : show timestamp
-
-Experimental options:
-  -i, -interval=STRING  : output interval (e.g. 2h45m, 1m, 2s, 300ms) (default %d)
 `, DefaultBufferSize, DefaultInterval)
 	}
 
