@@ -16,7 +16,7 @@ func main() {
 
 	var (
 		bufSize       int
-		interval      int
+		interval      time.Duration
 		listenAny     bool
 		listenPort    string
 		showTimestamp bool
@@ -26,8 +26,8 @@ func main() {
 	flag.IntVar(&bufSize, "buffer-size", DefaultBufferSize, "")
 	flag.IntVar(&bufSize, "b", DefaultBufferSize, "")
 
-	flag.IntVar(&interval, "interval", DefaultInterval, "")
-	flag.IntVar(&interval, "i", DefaultInterval, "")
+	flag.DurationVar(&interval, "interval", DefaultInterval, "")
+	flag.DurationVar(&interval, "i", DefaultInterval, "")
 
 	flag.BoolVar(&listenAny, "listen-any", false, "")
 	flag.BoolVar(&listenAny, "a", false, "")
@@ -51,7 +51,7 @@ Options:
   -t, -show-timestamp   : show timestamp
 
 Experimental options:
-  -i, -interval=NUM     : output interval (millisecond) (default %d)
+  -i, -interval=STRING  : output interval (e.g. 2h45m, 1m, 2s, 300ms) (default %d)
 `, DefaultBufferSize, DefaultInterval)
 	}
 
@@ -86,7 +86,7 @@ Experimental options:
 
 	var tick <-chan time.Time
 	if useInterval {
-		tick = time.Tick(time.Duration(interval) * time.Millisecond)
+		tick = time.Tick(interval)
 	}
 
 	ch := make(chan string)
