@@ -69,6 +69,8 @@ Experimental options:
 		listenIP = "127.0.0.1"
 	}
 
+	useInterval := interval > 0
+
 	localEP, err := net.ResolveUDPAddr("udp", listenIP+":"+listenPort)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
@@ -82,38 +84,44 @@ Experimental options:
 	}
 	defer conn.Close()
 
-	buf := make([]byte, bufSize)
-
 	var tick <-chan time.Time
-	useInterval := interval > 0
 	if useInterval {
 		tick = time.Tick(time.Duration(interval) * time.Millisecond)
 	}
 
-	for {
-		n, remoteEP, err := conn.ReadFromUDP(buf)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
-		}
+	ch := make(chan string)
+	go func() {
+		buf := make([]byte, bufSize)
+		for {
+			n, remoteEP, err := conn.ReadFromUDP(buf)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
+			}
 
-		var s string
-		if showTimestamp {
-			s += time.Now().Format("2006-01-02 15:04:05.00 ")
+			var s string
+			if showTimestamp {
+				s += time.Now().Format("2006-01-02 15:04:05.00 ")
+			}
+			if showSender {
+				s += fmt.Sprintf("[%s] ", remoteEP)
+			}
+			s += string(buf[0:n])
+			ch <- s
 		}
-		if showSender {
-			s += fmt.Sprintf("[%s] ", remoteEP)
-		}
-		s += string(buf[0:n])
+	}()
 
-		if useInterval {
+	if useInterval {
+		for {
 			select {
 			case <-tick:
-				fmt.Println(s)
+				fmt.Println(<-ch)
 			default:
-				// Nop
+				<-ch
 			}
-		} else {
-			fmt.Println(s)
+		}
+	} else {
+		for {
+			fmt.Println(<-ch)
 		}
 	}
 }
