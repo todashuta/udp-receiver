@@ -96,6 +96,7 @@ Experimental options:
 			n, remoteEP, err := conn.ReadFromUDP(buf)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
+				continue
 			}
 
 			var s string
