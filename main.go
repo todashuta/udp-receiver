@@ -19,6 +19,7 @@ func main() {
 		interval      time.Duration
 		listenAny     bool
 		listenPort    string
+		quote         bool
 		showTimestamp bool
 		showSender    bool
 	)
@@ -34,6 +35,8 @@ func main() {
 
 	flag.StringVar(&listenPort, "listen-port", "", "")
 	flag.StringVar(&listenPort, "p", "", "")
+
+	flag.BoolVar(&quote, "q", false, "")
 
 	flag.BoolVar(&showSender, "show-sender", false, "")
 	flag.BoolVar(&showSender, "s", false, "")
@@ -87,6 +90,13 @@ Options:
 		tick = time.Tick(interval)
 	}
 
+	var format string
+	if quote {
+		format = "%q"
+	} else {
+		format = "%s"
+	}
+
 	ch := make(chan string)
 	go func() {
 		buf := make([]byte, bufSize)
@@ -104,7 +114,7 @@ Options:
 			if showSender {
 				s += fmt.Sprintf("[%s] ", remoteEP)
 			}
-			s += string(buf[0:n])
+			s += fmt.Sprintf(format, string(buf[0:n]))
 			ch <- s
 		}
 	}()
