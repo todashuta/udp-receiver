@@ -97,7 +97,7 @@ Options:
 		format = "%s"
 	}
 
-	ch := make(chan string)
+	ch := make(chan string, 2048)
 	go func() {
 		buf := make([]byte, bufSize)
 		for {
