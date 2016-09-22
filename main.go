@@ -70,7 +70,8 @@ Options:
 		listenIP = "127.0.0.1"
 	}
 
-	useInterval := interval > 0
+	var useInterval bool
+	useInterval = interval > 0
 
 	localEP, err := net.ResolveUDPAddr("udp", listenIP+":"+listenPort)
 	if err != nil {
