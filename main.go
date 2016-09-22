@@ -59,7 +59,7 @@ Options:
 	flag.Parse()
 
 	if listenPort == "" {
-		fmt.Fprintln(os.Stderr, "udp-viewer: ERROR: Please specify a port number (e.g. -p=4126)")
+		fmt.Fprintln(os.Stderr, "udp-receiver: ERROR: Please specify a port number (e.g. -p=4126)")
 		os.Exit(1)
 	}
 
@@ -74,13 +74,13 @@ Options:
 
 	localEP, err := net.ResolveUDPAddr("udp", listenIP+":"+listenPort)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
+		fmt.Fprintln(os.Stderr, "udp-receiver: ERROR:", err)
 		os.Exit(1)
 	}
 
 	conn, err := net.ListenUDP("udp", localEP)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
+		fmt.Fprintln(os.Stderr, "udp-receiver: ERROR:", err)
 		os.Exit(1)
 	}
 	defer conn.Close()
@@ -103,7 +103,7 @@ Options:
 		for {
 			n, remoteEP, err := conn.ReadFromUDP(buf)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "udp-viewer: ERROR:", err)
+				fmt.Fprintln(os.Stderr, "udp-receiver: ERROR:", err)
 				continue
 			}
 
